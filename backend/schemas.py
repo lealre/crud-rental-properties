@@ -2,24 +2,24 @@ from pydantic import BaseModel, PositiveFloat
 import datetime
 from typing import Optional
 
-class HouseBase(BaseModel):
+class RentalPropertyBase(BaseModel):
     description: str
     house_type: str
     price: PositiveFloat
     area: PositiveFloat
     location: str
 
-class HouseCreate(HouseBase):
+class RentalPropertyCreate(RentalPropertyBase):
     pass
 
-class HouseResponse(HouseBase):
+class RentalPropertyResponse(RentalPropertyBase):
     id: int
     created_at: datetime
 
     class Config:
         from_attributes = True
 
-class HouseUpdate(BaseModel):
+class RentalPropertyUpdate(BaseModel):
     description: Optional[str] = None
     house_type: Optional[str] = None
     price: Optional[PositiveFloat] = None

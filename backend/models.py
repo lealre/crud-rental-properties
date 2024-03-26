@@ -2,8 +2,8 @@ from .database import Base
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.sql import func
 
-class House():
-    __tablename__ = "houses"
+class RentalProperty(Base):
+    __tablename__ = "rental_properties"
 
     id = Column(Integer, primary_key = True)
     description = Column(String)
