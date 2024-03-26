@@ -2,7 +2,7 @@ from .database import Base
 from sqlalchemy import Column, Integer, String, Float, DateTime
 from sqlalchemy.sql import func
 
-class RentalHouse():
+class House():
     __tablename__ = "houses"
 
     id = Column(Integer, primary_key = True)
