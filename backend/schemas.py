@@ -1,5 +1,5 @@
 from pydantic import BaseModel, PositiveFloat
-import datetime
+from datetime import datetime
 from typing import Optional
 
 class RentalPropertyBase(BaseModel):

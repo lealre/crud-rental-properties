@@ -28,11 +28,11 @@ def delete_item(property_id: int, db: Session = Depends(get_db)):
     property_db =  delete_property(db=db, property_id= property_id)
     if property_db is None:
         raise HTTPException(status_code = 404, detail= "There is no property with this id to delete.")
-    return delete_property(db=db, property_id= property_id)
+    return property_db
 
 @router.put("/property/{property_id}", response_model= RentalPropertyResponse)
 def update_item(property_id: int, property: RentalPropertyUpdate, db: Session = Depends(get_db)):
     property_db =  update_property(db=db, property_id= property_id, property= property)
     if property_db is None:
         raise HTTPException(status_code = 404, detail= "There is no property with this id to update.")
-    return delete_property(db=db, property_id= property_id)
+    return property_db

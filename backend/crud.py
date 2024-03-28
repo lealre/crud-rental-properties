@@ -53,8 +53,9 @@ def delete_property(db: Session, property_id: int):
     Delete a rental property from the database by its ID.
     """
     db_property = db.query(RentalProperty).filter(RentalProperty.id == property_id).first()
-    db.delete(db_property)
-    db.commit()
+    if db_property:
+        db.delete(db_property)
+        db.commit()
     return db_property
 
 
