@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from .schemas import RentalPropertyUpdate, RentalPropertyCreate
-from .models import RentalProperty
+from schemas import RentalPropertyUpdate, RentalPropertyCreate
+from models import RentalProperty
 
 def get_all_properties(db: Session):
     """
