@@ -6,6 +6,7 @@ This project consists of a web application to interact with a catalog of rental 
 - Updating a specific item in catalog by passing the corresponding ID. 
 - Delete a specific item in catalog by passing the corresponding ID.
 
+<img src="media/demo.gif" width = 1000 />
 
 ## How it Works
 
@@ -28,8 +29,6 @@ After Pydantic validation is completed, SQLAlchemy is used to communicate with P
 
 ![](media/diag.png)
 <!-- ![](media/demo.gif) -->
-
-<img src="media/demo.gif" width = 1000 />
 
 
 
