@@ -29,7 +29,7 @@ After Pydantic validation is completed, SQLAlchemy is used to communicate with P
 ![](media/diag.png)
 <!-- ![](media/demo.gif) -->
 
-<!-- <img src="media/demo.gif"  /> -->
+<img src="media/demo.gif" width = 500 />
 
 
 
