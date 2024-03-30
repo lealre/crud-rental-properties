@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from database import engine
-from models import Base
-from router import router
+from .database import engine
+from .models import Base
+from .router import router
 
 Base.metadata.create_all(engine)
 
