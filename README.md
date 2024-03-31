@@ -11,7 +11,9 @@ Below is a demonstration of the project deployed on EC2 AWS Cloud. The console o
 
 <img src="media/demo.gif" width = 1000 />
 
-Due to cost considerations, the EC2 instance was terminated, and the project is no longer available online, although you can run it locally by following the steps in [how to run this project](##How-to-run-this-project).
+The project was built in a way where three services communicate with each other separately: database, backend, and frontend. Docker Compose was used to orchestrate the containers, allowing the frontend to communicate with the backend through the API once each one is running in independent containers.
+
+Due to cost considerations, the EC2 instance was terminated, and the project is no longer available online, although you can run it locally by following the steps in [how to run this project](##How-to-run-this-project-locally-with-Docker).
 
 ## How it Works
 
@@ -57,14 +59,16 @@ After Pydantic validation is completed, SQLAlchemy is used to communicate with P
 │   ├── demo.gif
 │   └── diag.png
 ├── poetry.lock
-└── pyproject.toml
+├── pyproject.toml
+└── sql
+    └── create_table.sql
 ```
 
-## How to run this project with Docker
+## How to run this project locally with Docker
 
-All the steps from here were intended to a `bash` terminal.
+As mentioned before, this project was built in a way that the frontend and backend run in different Docker containers. To run it locally, I used Docker CLI in a `bash` terminal.
 
-Before proceeding, make sure you have the necessary information about your PostgreSQL database, including the user, password, host, port, and database name. You also need to connect the app to your own PostgresSQL database and create the table used by running the following SQL comand:
+Before proceeding, you need to create the table used by running the following SQL command in your PostgreSQL database:
 
 ```SQL
 CREATE TABLE rental_properties (
@@ -78,17 +82,19 @@ CREATE TABLE rental_properties (
 );
 ```
 
-1.1 - Clone the repository locally:
+After accessing the folder you want to run this in your terminal, follow the steps below.
+
+1 - Clone the repository locally:
 ```bash
 git clone https://github.com/lealre/crud-rental-properties.git
 ```
 
-1.2 - Access the project folder:
+2 - Access the project folder:
 ```bash
 cd crud-rental-properties
 ```
 
-1.3 - Create the `.env` file in the root folder, passing the respective keys from your own PostgresSQL Database:
+3 - Create the `.env` file in the root folder, passing the respective keys from your own PostgresSQL Database. It is needed to connect the app to your database:
 ```bash
 echo "POSTGRES_USER=<your-database-keys>" >> .env
 echo "POSTGRES_PASSWORD=<your-database-keys>" >> .env
@@ -97,19 +103,21 @@ echo "POSTGRES_PORT=<your-database-keys>" >> .env
 echo "POSTGRES_DB=<your-database-keys>" >> .env
 ```
 
-1.4 - Build the Docker image
+4 - Build the Docker image
 ```bash
 docker compose build
 ```
 
-1.5 - Run the Docker container
+5 - Run the Docker container
 ```bash
 docker compose up
 ```
 
-1.6 - Access your localhost in port 8501
+6 - Access your localhost in port 8501
 
 http://localhost:8501/
 
-Make sure `.env` file is included in `.gitignore`.
+After these steps you should be able to access the app and perform all CRUD operations in your database.
+
+Note: Make sure `.env` file is included in `.gitignore`.
 
