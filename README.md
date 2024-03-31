@@ -11,9 +11,11 @@ Below is a demonstration of the project deployed on EC2 AWS Cloud. The console o
 
 <img src="media/demo.gif" width = 1000 />
 
+Due to cost considerations, the EC2 instance was terminated, and the project is no longer available online, although you can run it locally by following the steps in [how to run this project](##How-to-run-this-project).
+
 ## How it Works
 
-The catalog has 5 fields:
+The table below shows the 5 catalog fields used in the application. For House Type identification, the convention commonly used in Europe was employed, where T0 represents a house with no bedrooms, T1 represents a house with one bedroom, and so on.
 
 | Column Name           | Python Type Hint |
 |-----------------------|------------------|
@@ -59,3 +61,40 @@ After Pydantic validation is completed, SQLAlchemy is used to communicate with P
 ```
 
 ## How to run this project
+
+All the steps from here were intended to a `bash` terminal.
+
+Before proceeding, make sure you have the necessary information about your PostgreSQL database, including the user, password, host, port, and database name.
+
+To properly run this project locally, you need to connect the app to your own PostgresSQL database. You can do this by following the steps below:
+
+1.1 - Clone the repository locally:
+```bash
+git clone https://github.com/lealre/crud-rental-properties.git
+```
+
+1.2 - Access the project folder:
+```bash
+cd crud-rental-properties
+```
+
+1.3 - Create the `.env` file in the root folder, passing the respective keys from your own PostgresSQL Database:
+```bash
+echo "POSTGRES_USER=<your-database-keys>" >> .env
+echo "POSTGRES_PASSWORD=<your-database-keys>" >> .env
+echo "POSTGRES_HOST=<your-database-keys>" >> .env
+echo "POSTGRES_PORT=<your-database-keys>" >> .env
+echo "POSTGRES_DB=<your-database-keys>" >> .env
+```
+
+1.4 - Make sure `.env` file is included in `.gitignore`.
+
+From here, we have two options to run the project:
+
+- Configuring the local setup
+- Using Docker
+
+### Local Setup
+
+### Using Docker
+
