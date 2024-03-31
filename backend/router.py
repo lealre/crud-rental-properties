@@ -10,6 +10,8 @@ router = APIRouter()
 @router.get("/properties/", response_model= List[RentalPropertyResponse])
 def read_all_items(db: Session = Depends(get_db)):
     properties_db = get_all_properties(db)
+    if properties_db is None:
+        raise HTTPException(status_code = 404, detail= "There are no properties in database yet.")
     return properties_db
 
 @router.get("/properties/{property_id}", response_model= RentalPropertyResponse)

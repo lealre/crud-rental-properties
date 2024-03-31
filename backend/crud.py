@@ -6,7 +6,10 @@ def get_all_properties(db: Session):
     """
     Retrieve all rental properties from the database.
     """
-    return db.query(RentalProperty).all()
+    properties = db.query(RentalProperty).all()
+    if not properties: 
+        return None  
+    return properties 
 
 def get_property_by_id(db: Session, property_id: int):
     """
