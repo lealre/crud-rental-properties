@@ -60,11 +60,11 @@ After Pydantic validation is completed, SQLAlchemy is used to communicate with P
 └── pyproject.toml
 ```
 
-## How to run this project
+## How to run this project with Docker
 
 All the steps from here were intended to a `bash` terminal.
 
-Before proceeding, make sure you have the necessary information about your PostgreSQL database, including the user, password, host, port, and database name. You also need to create the table in your database by running the following SQL comand:
+Before proceeding, make sure you have the necessary information about your PostgreSQL database, including the user, password, host, port, and database name. You also need to connect the app to your own PostgresSQL database and create the table used by running the following SQL comand:
 
 ```SQL
 CREATE TABLE rental_properties (
@@ -77,8 +77,6 @@ CREATE TABLE rental_properties (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-
-To properly run this project locally, you need to connect the app to your own PostgresSQL database. You can do this by following the steps below:
 
 1.1 - Clone the repository locally:
 ```bash
@@ -99,14 +97,19 @@ echo "POSTGRES_PORT=<your-database-keys>" >> .env
 echo "POSTGRES_DB=<your-database-keys>" >> .env
 ```
 
-1.4 - Make sure `.env` file is included in `.gitignore`.
+1.4 - Build the Docker image
+```bash
+docker compose build
+```
 
-From here, we have two options to run the project:
+1.5 - Run the Docker container
+```bash
+docker compose up
+```
 
-- Configuring the local setup
-- Using Docker
+1.6 - Access your localhost in port 8501
 
-### Local Setup
+http://localhost:8501/
 
-### Using Docker
+Make sure `.env` file is included in `.gitignore`.
 
