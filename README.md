@@ -64,7 +64,19 @@ After Pydantic validation is completed, SQLAlchemy is used to communicate with P
 
 All the steps from here were intended to a `bash` terminal.
 
-Before proceeding, make sure you have the necessary information about your PostgreSQL database, including the user, password, host, port, and database name.
+Before proceeding, make sure you have the necessary information about your PostgreSQL database, including the user, password, host, port, and database name. You also need to create the table in your database by running the following SQL comand:
+
+```SQL
+CREATE TABLE rental_properties (
+    id SERIAL PRIMARY KEY,
+    description VARCHAR,
+    house_type VARCHAR,
+    price FLOAT,
+    area FLOAT,
+    location VARCHAR,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
 To properly run this project locally, you need to connect the app to your own PostgresSQL database. You can do this by following the steps below:
 
