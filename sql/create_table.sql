@@ -5,5 +5,5 @@ CREATE TABLE rental_properties (
     price FLOAT,
     area FLOAT,
     location VARCHAR,
-    created_at TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
