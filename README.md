@@ -103,17 +103,17 @@ echo "POSTGRES_PORT=<your-database-keys>" >> .env
 echo "POSTGRES_DB=<your-database-keys>" >> .env
 ```
 
-4 - Build the Docker image
+4 - Build the Docker image:
 ```bash
 docker compose build
 ```
 
-5 - Run the Docker container
+5 - Run the Docker container:
 ```bash
 docker compose up
 ```
 
-6 - Access your localhost in port 8501
+6 - Access your localhost in port 8501:
 
 http://localhost:8501/
 
@@ -121,3 +121,5 @@ After these steps you should be able to access the app and perform all CRUD oper
 
 Note: Make sure `.env` file is included in `.gitignore`.
 
+---------------------------
+This is the Project 02 of [Python Bootcamp for Data engineering](https://github.com/lealre/python-bootcamp-de).
