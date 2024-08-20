@@ -25,4 +25,3 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.taskipy.tasks]
 api = "uvicorn backend.main:app"
-
