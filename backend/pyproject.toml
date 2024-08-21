@@ -21,3 +21,26 @@ ruff = "^0.6.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 79
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = [
+    'I', # isort
+    'F', # flake8
+    'E', # pylint
+    'W', # pylint warnings
+    'PL', # black
+    'PT' # pytest
+]
+
+[tool.taskipy.tasks]
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'

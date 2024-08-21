@@ -3,12 +3,12 @@ from sqlalchemy.orm import sessionmaker
 
 from app.settings import Settings
 
-
 engine = create_async_engine(Settings().DATABSE_URL, echo=True)
 
 AsyncSessionLocal = sessionmaker(
     autocommit=False,
-    autoflush=False,
+    autoflush=True,
+    expire_on_commit=False,
     bind=engine,
     class_=AsyncSession,
 )

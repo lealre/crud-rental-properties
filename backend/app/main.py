@@ -1,6 +1,6 @@
-from fastapi import FastAPI
-
 from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
 
 from app.database import engine
 from app.model import table_registry
@@ -17,10 +17,10 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+
 @app.get('/')
 def get_root():
     return {'message': 'Hello World!'}
 
+
 app.include_router(router)
-
-

@@ -2,9 +2,10 @@ from datetime import datetime
 from enum import Enum
 
 from sqlalchemy import func
-from sqlalchemy.orm import mapped_column, Mapped, registry 
+from sqlalchemy.orm import Mapped, mapped_column, registry
 
 table_registry = registry()
+
 
 class NumBedrooms(str, Enum):
     t1 = 'T1'
@@ -14,6 +15,7 @@ class NumBedrooms(str, Enum):
     t5 = 'T5'
     t6 = 'T6'
     t6_plus = 'T6+'
+
 
 @table_registry.mapped_as_dataclass
 class Property:
