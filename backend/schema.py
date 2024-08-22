@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from app.model import NumBedrooms
+from backend.model import NumBedrooms
 
 
 class Message(BaseModel):

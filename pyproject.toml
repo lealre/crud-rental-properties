@@ -1,22 +1,32 @@
 [tool.poetry]
-name = "app"
+name = "rental-crud"
 version = "0.1.0"
 description = ""
 authors = ["lealre <renaanvp@gmail.com>"]
 readme = "README.md"
+packages = [
+    {include = 'backend'},
+    {include = 'frontend'},
+]
 
 [tool.poetry.dependencies]
 python = "3.12.*"
+
+
+[tool.poetry.group.backend.dependencies]
 fastapi = {extras = ["standard"], version = "^0.112.1"}
 sqlalchemy = "^2.0.32"
 pydantic-settings = "^2.4.0"
-aiosqlite = "^0.20.0"
 
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.3.2"
+ruff = "^0.6.2"
 taskipy = "^1.13.0"
-ruff = "^0.6.1"
+aiosqlite = "^0.20.0"
+
+
+[tool.poetry.group.frontend.dependencies]
+streamlit = "^1.37.1"
 
 [build-system]
 requires = ["poetry-core"]

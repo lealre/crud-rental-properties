@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from app.model import Property
-from app.schema import PropertyRequest
+from backend.model import Property
+from backend.schema import PropertyRequest
 
 
 async def add_property(session: AsyncSession, property: PropertyRequest):
@@ -24,6 +24,18 @@ async def get_all_properties(session: AsyncSession, skip: int, limit: int):
         return properties_list
 
 
+async def get_property_by_id(session: AsyncSession, property_id: int):
+    async with session.begin():
+        db_property = await session.scalar(
+            select(Property).where(Property.id == property_id)
+        )
+
+        if not db_property:
+            return
+
+        return db_property
+
+
 async def update_property(
     session: AsyncSession, property_id: int, property: dict
 ):
@@ -33,7 +45,6 @@ async def update_property(
         )
 
         if not db_property:
-            await session.rollback()
             return
 
         for key, value in property.items():
@@ -53,7 +64,6 @@ async def delete_property(session: AsyncSession, property_id: int):
         )
 
         if not db_property:
-            await session.rollback()
             return
 
         await session.delete(db_property)

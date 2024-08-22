@@ -2,9 +2,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.database import engine
-from app.model import table_registry
-from app.router import router
+from backend.database import engine
+from backend.model import table_registry
+from backend.router import router
 
 
 @asynccontextmanager
