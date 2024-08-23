@@ -6,4 +6,4 @@ class Settings(BaseSettings):
         env_file='.env', env_file_encoding='utf-8', extra='allow'
     )
 
-    DATABSE_URL: str = 'sqlite+aiosqlite:///db.db'
+    DATABASE_URL: str = 'postgresql+asyncpg://user-name:postgres@db:5432/db'

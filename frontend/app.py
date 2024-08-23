@@ -22,7 +22,7 @@ with st.expander("Add a new property unit"):
 
         if submit_button:
             response = requests.post(
-                "http://localhost:8000/property/",
+                "http://backend:8000/property/",
                 json={
                     "description": description,
                     "number_bedrooms" : number_bedrooms,
@@ -37,7 +37,7 @@ with st.expander("Add a new property unit"):
 
 with st.expander("View All Listed Properties"):
     if st.button("Show All Properties"):
-        response = requests.get("http://localhost:8000/property/")
+        response = requests.get("http://backend:8000/property/")
         if response.status_code == 200:
             product = response.json()['properties']
             df = pd.DataFrame(product)
@@ -60,7 +60,7 @@ with st.expander("View All Listed Properties"):
 with st.expander("Search for a Listed Property"):
     get_id = st.number_input("Property ID", min_value=1, format="%d")
     if st.button("Search Property"):
-        response = requests.get(f"http://localhost:8000/property/{get_id}")
+        response = requests.get(f"http://backend:8000/property/{get_id}")
         if response.status_code == 200:
             product = response.json()
             df = pd.DataFrame([product])
@@ -84,7 +84,7 @@ with st.expander("Search for a Listed Property"):
 with st.expander("Delete a Listed Property"):
     delete_id = st.number_input("Property ID to Delete", min_value=1, format="%d")
     if st.button("Delete"):
-        response = requests.delete(f"http://localhost:8000/property/{delete_id}")
+        response = requests.delete(f"http://backend:8000/property/{delete_id}")
         show_response_message(response)
 
 
@@ -113,7 +113,7 @@ with st.expander("Update a Listed Property"):
 
             if update_data:
                 response = requests.patch(
-                    f"http://localhost:8000/property/{update_data.get('id')}", json=update_data
+                    f"http://backend:8000/property/{update_data.get('id')}", json=update_data
                 )
 
                 show_response_message(response)
