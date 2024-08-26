@@ -3,47 +3,59 @@ services:
   db:
     image: postgres
     container_name: db
-    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_DB: app_db
+      POSTGRES_PASSWORD: app_password
     ports:
       - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8888:80"
     environment:
-      POSTGRES_DB: db
-      POSTGRES_USER: user-name
-      POSTGRES_PASSWORD: postgres
+      PGADMIN_DEFAULT_EMAIL: user-name@domain-name.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin
     volumes:
-      - local_pgdata:/var/lib/postgresql/data
+      - pgadmin-data:/var/lib/pgadmin
+
   
-#   backend:
-#     build: 
-#       context: .
-#       dockerfile: backend/Dockerfile
-#     volumes:
-#       - ./backend:/app/backend
-#     environment:
-#       - DATABASE_URL=${DATABASE_URL}
-#     env_file:
-#       - .env
-#     ports:
-#       - "8000:8000"
-#     depends_on:
-#       - database
-#     networks:
-#       - mynetwork
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    volumes:
+      - ./backend:/app/backend
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - mynetwork
       
-#   frontend:
-#     build: 
-#       context: .
-#       dockerfile: frontend/Dockerfile
-#     volumes:
-#       - ./frontend:/app/frontend
-#     ports:
-#       - "8501:8501"
-#     networks:
-#       - mynetwork
+  frontend:
+    build: 
+      context: .
+      dockerfile: frontend/Dockerfile
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - "8501:8501"
+    networks:
+      - mynetwork
   
-# networks:
-#   mynetwork:
+networks:
+  mynetwork:
 
 volumes:
-  local_pgdata:
+  pgdata:
   pgadmin-data:

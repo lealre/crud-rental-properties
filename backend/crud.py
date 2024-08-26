@@ -16,7 +16,7 @@ async def add_property(session: AsyncSession, property: PropertyRequest):
     return db_property
 
 
-async def get_all_properties(session: AsyncSession, skip: int, limit: int):
+async def get_all_properties(session: AsyncSession, limit: int, skip: int):
     async with session.begin():
         properties_list = await session.scalars(
             select(Property).offset(skip).limit(limit)
