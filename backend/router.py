@@ -46,7 +46,7 @@ async def get_property_by_id_route(session: SessionDep, property_id: int):
     if not db_property:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND,
-            detail='Property ID was not found.'
+            detail='Property ID was not found.',
         )
 
     return db_property
