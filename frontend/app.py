@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import streamlit as st
 
-from .response import show_response_message
+from frontend.response import show_response_message
 
 st.set_page_config(layout="wide")
 

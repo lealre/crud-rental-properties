@@ -7,16 +7,7 @@ from backend.model import table_registry
 from backend.router import router
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(table_registry.metadata.create_all)
-        yield
-    await engine.dispose()
-
-
-app = FastAPI(lifespan=lifespan)
-
+app = FastAPI()
 
 @app.get('/')
 def get_root():

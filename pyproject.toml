@@ -12,19 +12,17 @@ packages = [
 [tool.poetry.dependencies]
 python = "3.12.*"
 
-
 [tool.poetry.group.backend.dependencies]
 fastapi = {extras = ["standard"], version = "^0.112.1"}
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.32"}
 pydantic-settings = "^2.4.0"
 asyncpg = "^0.29.0"
-
+alembic = "^1.13.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.2"
 taskipy = "^1.13.0"
 aiosqlite = "^0.20.0"
-
 
 [tool.poetry.group.frontend.dependencies]
 streamlit = "^1.37.1"

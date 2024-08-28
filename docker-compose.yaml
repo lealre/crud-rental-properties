@@ -1,8 +1,6 @@
-
 services:
-  db:
+  rental_database:
     image: postgres
-    container_name: db
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
@@ -11,6 +9,8 @@ services:
       POSTGRES_PASSWORD: app_password
     ports:
       - "5432:5432"
+    networks:
+      - mynetwork
 
   pgadmin:
     image: dpage/pgadmin4
@@ -23,22 +23,22 @@ services:
       PGADMIN_DEFAULT_PASSWORD: pgadmin
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-
+    networks:
+      - mynetwork
   
   backend:
     build: 
       context: .
       dockerfile: backend/Dockerfile
+    entrypoint: ./backend/entrypoint.sh
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/rental-crud/backend
     environment:
-      - DATABASE_URL=${DATABASE_URL}
-    env_file:
-      - .env
+      DATABASE_URL: postgresql+asyncpg://app_user:app_password@rental_database:5432/app_db
     ports:
       - "8000:8000"
     depends_on:
-      - db
+      - rental_database
     networks:
       - mynetwork
       
@@ -47,7 +47,7 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
     volumes:
-      - ./frontend:/app/frontend
+      - ./frontend:/rental-crud/frontend
     ports:
       - "8501:8501"
     networks:
@@ -55,6 +55,7 @@ services:
   
 networks:
   mynetwork:
+      driver: bridge
 
 volumes:
   pgdata:

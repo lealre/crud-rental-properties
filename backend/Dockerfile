@@ -1,7 +1,8 @@
 FROM python:3.12-slim
+ENV POETRY_VIRTUALENVS_CREATE=false
 
-WORKDIR /app
-COPY pyproject.toml poetry.lock ./
+WORKDIR /rental-crud
+COPY alembic.ini pyproject.toml poetry.lock ./
 
 RUN pip install poetry
 
@@ -12,4 +13,5 @@ COPY backend/ backend/
 
 EXPOSE 8000
 
-CMD poetry run fastapi run backend/main.py --host 0.0.0.0
+ENTRYPOINT ["sh", "/rental-crud/backend/entrypoint.sh"]
+
