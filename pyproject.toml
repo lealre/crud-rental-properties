@@ -11,6 +11,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "3.12.*"
+pytest-asyncio = "^0.24.0"
 
 [tool.poetry.group.backend.dependencies]
 fastapi = {extras = ["standard"], version = "^0.112.1"}
@@ -23,6 +24,7 @@ alembic = "^1.13.2"
 ruff = "^0.6.2"
 taskipy = "^1.13.0"
 aiosqlite = "^0.20.0"
+pytest = "^8.3.2"
 
 [tool.poetry.group.frontend.dependencies]
 streamlit = "^1.37.1"
@@ -30,6 +32,11 @@ streamlit = "^1.37.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 79
