@@ -1,11 +1,17 @@
-FROM python:3.11.5-slim AS base
+FROM python:3.12-slim
+ENV POETRY_VIRTUALENVS_CREATE=false
 
-WORKDIR /app
+WORKDIR /rental-crud
+COPY alembic.ini pyproject.toml poetry.lock ./
 
-COPY requirements.txt /app/requirements.txt
+RUN pip install poetry
 
-RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+RUN poetry config installer.max-workers 10
+RUN poetry install --only backend --no-interaction --no-ansi
 
-COPY . /app/backend
+COPY backend/ backend/
 
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 8000
+
+ENTRYPOINT ["sh", "/rental-crud/backend/entrypoint.sh"]
+

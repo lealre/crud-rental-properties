@@ -1,64 +1,73 @@
-from sqlalchemy.orm import Session
-from .schemas import RentalPropertyUpdate, RentalPropertyCreate
-from .models import RentalProperty
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
-def get_all_properties(db: Session):
-    """
-    Retrieve all rental properties from the database.
-    """
-    properties = db.query(RentalProperty).all()
-    if not properties: 
-        return None  
-    return properties 
+from backend.model import Property
+from backend.schema import PropertyRequest
 
-def get_property_by_id(db: Session, property_id: int):
-    """
-    Retrieve a rental property by its ID.
-    """
-    return db.query(RentalProperty).filter(RentalProperty.id == property_id).first()
 
-def create_rental_property(db: Session, rental_property: RentalPropertyCreate):
-    """
-    Create a new rental property in the database.
-    """
-    db_property = RentalProperty(**rental_property.model_dump())
-    db.add(db_property)
-    db.commit()
-    db.refresh(db_property)
-    return db_property
+async def add_property(session: AsyncSession, property: PropertyRequest):
+    db_property = Property(**property.model_dump())
 
-def update_property(db: Session, property_id: int, property: RentalPropertyUpdate):
-    """
-    Update a rental property from the database by its ID.
-    """    
-    db_property = db.query(RentalProperty).filter(RentalProperty.id == property_id).first()
+    async with session.begin():
+        session.add(db_property)
+        await session.commit()
 
-    if db_property is None:
-        return None
-    
-    if property.description is not None:
-        db_property.description = property.description
-    if property.house_type is not None:
-        db_property.house_type = property.house_type
-    if property.price is not None:
-        db_property.price = property.price
-    if property.area is not None:
-        db_property.area = property.area
-    if property.location is not None:
-        db_property.location = property.location
-
-    db.commit()
-    db.refresh(db_property)
-    return db_property
-
-def delete_property(db: Session, property_id: int):
-    """
-    Delete a rental property from the database by its ID.
-    """
-    db_property = db.query(RentalProperty).filter(RentalProperty.id == property_id).first()
-    if db_property:
-        db.delete(db_property)
-        db.commit()
+    await session.refresh(db_property)
     return db_property
 
 
+async def get_all_properties(session: AsyncSession, limit: int, skip: int):
+    async with session.begin():
+        properties_list = await session.scalars(
+            select(Property).limit(limit).offset(skip)
+        )
+
+        return properties_list
+
+
+async def get_property_by_id(session: AsyncSession, property_id: int):
+    async with session.begin():
+        db_property = await session.scalar(
+            select(Property).where(Property.id == property_id)
+        )
+
+        if not db_property:
+            return
+
+        return db_property
+
+
+async def update_property(
+    session: AsyncSession, property_id: int, property: dict
+):
+    async with session.begin():
+        db_property = await session.scalar(
+            select(Property).where(Property.id == property_id)
+        )
+
+        if not db_property:
+            return
+
+        for key, value in property.items():
+            setattr(db_property, key, value)
+
+        session.add(db_property)
+        await session.commit()
+
+    await session.refresh(db_property)
+    return db_property
+
+
+async def delete_property(session: AsyncSession, property_id: int):
+    async with session.begin():
+        db_property = await session.scalar(
+            select(Property).where(Property.id == property_id)
+        )
+
+        if not db_property:
+            return
+
+        await session.delete(db_property)
+        await session.commit()
+
+        return True

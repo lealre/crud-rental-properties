@@ -1,9 +1,13 @@
 from fastapi import FastAPI
-from .database import engine
-from .models import Base
-from .router import router
 
-Base.metadata.create_all(engine)
+from backend.router import router
 
 app = FastAPI()
+
+
+@app.get('/')
+def get_root():
+    return {'message': 'Hello World!'}
+
+
 app.include_router(router)

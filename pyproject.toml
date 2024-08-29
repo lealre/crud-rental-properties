@@ -4,25 +4,52 @@ version = "0.1.0"
 description = ""
 authors = ["lealre <renaanvp@gmail.com>"]
 readme = "README.md"
+packages = [
+    {include = 'backend'},
+    {include = 'frontend'},
+]
 
 [tool.poetry.dependencies]
-python = "3.11.5"
-pydantic = "^2.6.4"
-sqlalchemy = "^2.0.29"
-fastapi = "^0.110.0"
-python-dotenv = "^1.0.1"
-uvicorn = "^0.29.0"
-psycopg2-binary = "^2.9.9"
-taskipy = "^1.12.2"
-streamlit = "^1.32.2"
-pandas = "^2.2.1"
-requests = "^2.31.0"
+python = "3.12.*"
 
+[tool.poetry.group.backend.dependencies]
+fastapi = {extras = ["standard"], version = "^0.112.1"}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.32"}
+pydantic-settings = "^2.4.0"
+asyncpg = "^0.29.0"
+alembic = "^1.13.2"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.2"
+taskipy = "^1.13.0"
+aiosqlite = "^0.20.0"
+
+[tool.poetry.group.frontend.dependencies]
+streamlit = "^1.37.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.taskipy.tasks]
-api = "uvicorn backend.main:app"
+[tool.ruff]
+line-length = 79
+extend-exclude = ['alembic']
 
+[tool.ruff.lint]
+preview = true
+select = [
+    'I', # isort
+    'F', # flake8
+    'E', # pylint
+    'W', # pylint warnings
+    'PL', # black
+    'PT' # pytest
+]
+
+[tool.taskipy.tasks]
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'

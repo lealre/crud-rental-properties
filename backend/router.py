@@ -1,40 +1,97 @@
+from http import HTTPStatus
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from .database import get_db
-from .schemas import RentalPropertyCreate, RentalPropertyResponse, RentalPropertyUpdate
-from typing import List
-from .crud import get_all_properties, get_property_by_id, create_rental_property, update_property, delete_property
+from sqlalchemy.ext.asyncio import AsyncSession
 
-router = APIRouter()
+from backend.crud import (
+    add_property,
+    delete_property,
+    get_all_properties,
+    get_property_by_id,
+    update_property,
+)
+from backend.database import get_session
+from backend.schema import (
+    Message,
+    PropertiesList,
+    PropertyRequest,
+    PropertyResponse,
+    PropertyUpdateRequest,
+)
 
-@router.get("/properties/", response_model= List[RentalPropertyResponse])
-def read_all_items(db: Session = Depends(get_db)):
-    properties_db = get_all_properties(db)
-    if properties_db is None:
-        raise HTTPException(status_code = 404, detail= "There are no properties in database yet.")
-    return properties_db
+router = APIRouter(prefix='/property')
 
-@router.get("/properties/{property_id}", response_model= RentalPropertyResponse)
-def read_item_by_id(property_id: int, db: Session = Depends(get_db)):
-    property_db = get_property_by_id(db, property_id= property_id)
-    if property_db is None:
-        raise HTTPException(status_code = 404, detail= "There is no property with this id.")
-    return property_db
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
-@router.post("/properties/", response_model= RentalPropertyResponse)
-def create_item(property: RentalPropertyCreate, db: Session = Depends(get_db)):
-    return create_rental_property(db=db, rental_property = property)
 
-@router.delete("/properties/{property_id}", response_model = RentalPropertyResponse)
-def delete_item(property_id: int, db: Session = Depends(get_db)):    
-    property_db =  delete_property(db=db, property_id= property_id)
-    if property_db is None:
-        raise HTTPException(status_code = 404, detail= "There is no property with this id to delete.")
-    return property_db
+@router.post(
+    '/', response_model=PropertyResponse, status_code=HTTPStatus.CREATED
+)
+async def add_property_route(
+    property: PropertyRequest,
+    session: SessionDep,
+):
+    db_property = await add_property(session=session, property=property)
 
-@router.put("/properties/{property_id}", response_model= RentalPropertyResponse)
-def update_item(property_id: int, property: RentalPropertyUpdate, db: Session = Depends(get_db)):
-    property_db =  update_property(db=db, property_id= property_id, property= property)
-    if property_db is None:
-        raise HTTPException(status_code = 404, detail= "There is no property with this id to update.")
-    return property_db
+    return db_property
+
+
+@router.get('/{property_id}', response_model=PropertyResponse)
+async def get_property_by_id_route(session: SessionDep, property_id: int):
+    db_property = await get_property_by_id(
+        session=session, property_id=property_id
+    )
+
+    if not db_property:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Property ID was not found.',
+        )
+
+    return db_property
+
+
+@router.get('/', response_model=PropertiesList)
+async def get_all_properties_route(
+    session: SessionDep, skip: int = 0, limit: int = 100
+):
+    properties_list = await get_all_properties(
+        session=session, skip=skip, limit=limit
+    )
+
+    return {'properties': properties_list}
+
+
+@router.patch('/{property_id}', response_model=PropertyResponse)
+async def update_property_route(
+    session: SessionDep, property_id: int, property: PropertyUpdateRequest
+):
+    property_args = property.model_dump(exclude_unset=True)
+
+    db_property = await update_property(
+        session=session, property_id=property_id, property=property_args
+    )
+
+    if not db_property:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Property ID was not found.',
+        )
+
+    return db_property
+
+
+@router.delete('/{property_id}', response_model=Message)
+async def delete_property_route(session: SessionDep, property_id: int):
+    db_property = await delete_property(
+        session=session, property_id=property_id
+    )
+
+    if not db_property:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='Property ID was not found.',
+        )
+
+    return {'message': 'Property deleted.'}

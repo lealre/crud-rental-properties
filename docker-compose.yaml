@@ -1,28 +1,39 @@
-version: '3.8'
 services:
+  rental_database:
+    image: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_DB: app_db
+      POSTGRES_PASSWORD: app_password
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+  
   backend:
     build: 
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
+    entrypoint: ./backend/entrypoint.sh
     volumes:
-      - ./backend:/app/backend
+      - ./backend:/rental-crud/backend
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
+      DATABASE_URL: postgresql+asyncpg://app_user:app_password@rental_database:5432/app_db
     ports:
       - "8000:8000"
+    depends_on:
+      - rental_database
     networks:
       - mynetwork
       
   frontend:
     build: 
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: frontend/Dockerfile
     volumes:
-      - ./frontend:/app
+      - ./frontend:/rental-crud/frontend
     ports:
       - "8501:8501"
     networks:
@@ -30,3 +41,8 @@ services:
   
 networks:
   mynetwork:
+      driver: bridge
+
+volumes:
+  pgdata:
+  pgadmin-data:
