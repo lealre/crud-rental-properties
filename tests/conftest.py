@@ -5,22 +5,14 @@ from sqlalchemy.orm import sessionmaker
 
 from backend.database import get_session
 from backend.main import app
-from backend.model import table_registry
+from backend.model import Property, table_registry
 
 
 @pytest.fixture(scope='session')
-async def engine():
+def engine():
     _engine = create_async_engine('sqlite+aiosqlite:///:memory:', future=True)
 
-    async with _engine.begin() as conn:
-        await conn.run_sync(table_registry.metadata.create_all)
-
-    yield _engine
-
-    async with _engine.begin() as conn:
-        await conn.run_sync(table_registry.metadata.drop_all)
-
-    await _engine.dispose()
+    return _engine
 
 
 @pytest.fixture
@@ -33,8 +25,15 @@ async def session(engine):
         class_=AsyncSession,
     )
 
-    async with TestingAsynSessionLocal() as session:
-        yield session
+    async with engine.begin() as conn:
+        await conn.run_sync(table_registry.metadata.create_all)
+
+        async with TestingAsynSessionLocal() as session:
+            yield session
+
+        await conn.run_sync(table_registry.metadata.drop_all)
+
+    await engine.dispose()
 
 
 @pytest.fixture
@@ -48,3 +47,21 @@ async def client(session):
         yield client
 
     app.dependency_overrides.clear()
+
+
+@pytest.fixture
+async def property(session):
+    property = Property(
+        description='test description',
+        number_bedrooms='T0',
+        price=456,
+        area=456,
+        location='test location',
+    )
+
+    async with session.begin():
+        session.add(property)
+        await session.commit()
+        session.refresh(property)
+
+    return property
