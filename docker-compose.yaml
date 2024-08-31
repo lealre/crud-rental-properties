@@ -20,7 +20,7 @@ services:
     volumes:
       - ./backend:/rental-crud/backend
     environment:
-      DATABASE_URL: postgresql+asyncpg://app_user:app_password@rental_database:5432/app_db
+      DATABASE_URL: "${DATABASE_URL:-postgresql+asyncpg://app_user:app_password@rental_database:5432/app_db}"
     ports:
       - "8000:8000"
     depends_on:
