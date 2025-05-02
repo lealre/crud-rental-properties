@@ -7,7 +7,7 @@ COPY alembic.ini pyproject.toml poetry.lock ./
 RUN pip install poetry
 
 RUN poetry config installer.max-workers 10
-RUN poetry install --only backend --no-interaction --no-ansi
+RUN poetry install --only backend --no-root --no-interaction --no-ansi
 
 COPY backend/ backend/
 
